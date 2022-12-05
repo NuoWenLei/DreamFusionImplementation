@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Personal Ignores
+dreamfusion/
+.DS_Store
+*.ipynb
+
 # C extensions
 *.so
 
