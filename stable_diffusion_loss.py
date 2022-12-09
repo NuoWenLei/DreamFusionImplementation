@@ -35,7 +35,6 @@ def get_model_output(
 def diffuse_loss(model, prompt, image_observation,
 				unconditional_guidance_scale = 7.5,
 				batch_size = 1):
-	weight = 100
 	context, pos_ids = get_context_from_prompt(model, prompt, batch_size)
 	unconditional_tokens = np.array(_UNCONDITIONAL_TOKENS)[None].astype("int32")
 	unconditional_tokens = np.repeat(unconditional_tokens, batch_size, axis=0)
@@ -67,7 +66,7 @@ def diffuse_loss(model, prompt, image_observation,
 		batch_size
 	)
 	
-	return weight * (-pred_et - true_et)
+	return pred_et, true_et
 
 def manual_encode_and_diffuse(model, prompt,
                               num_steps = 50,
