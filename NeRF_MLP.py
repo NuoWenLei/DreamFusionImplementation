@@ -22,7 +22,7 @@ def get_nerf_model(num_layers, num_pos):
     return tf.keras.Model(inputs=inputs, outputs=outputs)
 
 
-def render_rgb_depth(model, rays_flat, t_vals, rand=True, train=True, early_aid_blob = None):
+def render_rgb_depth(model, rays_flat, t_vals, rand=False, train=True, early_aid_blob = None):
 	"""Generates the RGB image and depth map from model prediction.
 
 	Args:
