@@ -1,7 +1,6 @@
 from imports import tf
 from NeRF_MLP import render_rgb_depth
 from NeRF_color import depth_to_normals, color_shading
-from stable_diffusion_loss import diffuse_loss
 
 class BudgetDreamFusion(tf.keras.models.Model):
 	def __init__(self, target_text, nerf_model, diffuse_model, optimizer):

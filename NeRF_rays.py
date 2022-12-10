@@ -1,5 +1,5 @@
-from imports import tf, np
-from constants import POS_ENCODE_DIMS, NUM_SAMPLES, H, W
+from imports import tf
+from constants import POS_ENCODE_DIMS
 
 def encode_position(x):
     """Encodes the position into its corresponding Fourier feature.
