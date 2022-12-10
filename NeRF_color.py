@@ -1,5 +1,4 @@
 from imports import tf, np, convolve2d
-from constants import N_samples
 
 def color_shading(density_gradient, albedo, mu, light_coord, light_color = np.array([0.9, 0.9, 0.9]), light_ambient = np.array([0.1, 0.1, 0.1])):
 	# TODO: Are mu_points stored in a matrix and can we do batch processing?
