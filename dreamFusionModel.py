@@ -15,7 +15,10 @@ class BudgetDreamFusion(tf.keras.models.Model):
 		rays_flat, t_vals, rays_origin, rays_flat_unencoded, light_color, light_ambient = inputs
 		albedo, depth_map = render_rgb_depth(self.nerf_model, rays_flat, t_vals, train = True)
 		density_normals = depth_to_normals(depth_map[0])[tf.newaxis, ...]
-		colored_result = color_shading(density_normals, albedo, rays_flat_unencoded, rays_origin, light_color, light_ambient)
+		# print([tf.shape(x) for x in [density_normals, albedo, rays_flat_unencoded, rays_origin]])
+		colored_result = tf.concat([albedo, tf.reduce_mean(albedo, axis = -1)[..., tf.newaxis]], axis = -1)
+		# colored_result = color_shading(density_normals, albedo, rays_flat_unencoded, rays_origin, light_color, light_ambient)
+	
 		return colored_result
 
 

@@ -24,10 +24,10 @@ def get_model_output(
     timesteps = np.array([t])
     t_emb = model.timestep_embedding(timesteps)
     t_emb = np.repeat(t_emb, batch_size, axis=0)
-    unconditional_latent = model.diffusion_model.predict_on_batch(
+    unconditional_latent = model.diffusion_model(
         [latent, t_emb, unconditional_context]
     )
-    latent = model.diffusion_model.predict_on_batch([latent, t_emb, context])
+    latent = model.diffusion_model([latent, t_emb, context])
     return unconditional_latent + unconditional_guidance_scale * (
         latent - unconditional_latent
     ), unconditional_latent, latent
