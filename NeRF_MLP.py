@@ -50,16 +50,11 @@ def render_rgb_depth(model, rays_flat, t_vals, rand=False, train=True, early_aid
 	# Get the distance of adjacent intervals.
 	delta = t_vals[..., 1:] - t_vals[..., :-1]
 	# delta shape = (num_samples)
-	if rand:
-		delta = tf.concat(
-			[delta, tf.broadcast_to([1e10], shape=(BATCH_SIZE, H, W, 1))], axis=-1
-		)
-		alpha = 1.0 - tf.exp(-sigma_a * delta)
-	else:
-		delta = tf.concat(
+	delta = tf.concat(
 			[delta, tf.broadcast_to([1e10], shape=(BATCH_SIZE, 1))], axis=-1
 		)
-		alpha = 1.0 - tf.exp(-sigma_a * delta[:, None, None, :])
+	alpha = 1.0 - tf.exp(-sigma_a * delta[:, None, None, :])
+		
 
 	# Get transmittance.
 	exp_term = 1.0 - alpha
@@ -68,8 +63,5 @@ def render_rgb_depth(model, rays_flat, t_vals, rand=False, train=True, early_aid
 	weights = alpha * transmittance
 	rgb = tf.reduce_sum(weights[..., None] * rgb, axis=-2)
 
-	if rand:
-		depth_map = tf.reduce_sum(weights * t_vals, axis=-1)
-	else:
-		depth_map = tf.reduce_sum(weights * t_vals[:, None, None], axis=-1)
+	depth_map = tf.reduce_sum(weights * t_vals[:, None, None], axis=-1)
 	return (rgb, depth_map)

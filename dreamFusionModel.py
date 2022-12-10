@@ -12,10 +12,10 @@ class BudgetDreamFusion(tf.keras.models.Model):
 		self.optimizer = optimizer
 
 	def call(self, inputs):
-		rays_flat, t_vals, rays_origin, light_color, light_ambient = inputs
+		rays_flat, t_vals, rays_origin, rays_flat_unencoded, light_color, light_ambient = inputs
 		albedo, depth_map = render_rgb_depth(self.nerf_model, rays_flat, t_vals, train = True)
-		density_normals = depth_to_normals(depth_map)
-		colored_result = color_shading(density_normals, albedo, rays_flat, rays_origin, light_color, light_ambient)
+		density_normals = depth_to_normals(depth_map[0])[tf.newaxis, ...]
+		colored_result = color_shading(density_normals, albedo, rays_flat_unencoded, rays_origin, light_color, light_ambient)
 		return colored_result
 
 

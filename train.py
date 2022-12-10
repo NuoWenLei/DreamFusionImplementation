@@ -16,12 +16,12 @@ def train(model):
 		c2w = sample_random_c2w()
 		for step in tqdm(range(TRAIN_STEPS)):
 			ray_origins, ray_dirs = get_rays(H, W, model.focal, c2w)
-			rays_flat, t_vals = render_flat_rays(
+			rays_flat, t_vals, rays_flat_unencoded = render_flat_rays(
 				ray_origins, ray_dirs, near=2.0, far=6.0, num_samples=NUM_SAMPLES, rand=False
 			)
 			with tf.GradientTape() as tape:
 				image_observation = model([
-					rays_flat[tf.newaxis, ...], t_vals[tf.newaxis, ...], ray_origins[0],
+					rays_flat[tf.newaxis, ...], t_vals[tf.newaxis, ...], ray_origins[0, 0], rays_flat_unencoded,
 					np.array([0., 0., 0.]), np.array([1., 1., 1.]) 
 				])
 				pred_et, true_et = diffuse_loss(model.diffuse_model, model.target_text, image_observation)

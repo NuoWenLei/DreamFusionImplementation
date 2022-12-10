@@ -87,6 +87,6 @@ def render_flat_rays(ray_origins, ray_directions, near, far, num_samples, rand=F
     rays = ray_origins[..., None, :] + (
         ray_directions[..., None, :] * t_vals[..., None]
     )
-    rays_flat = tf.reshape(rays, [-1, 3])
-    rays_flat = encode_position(rays_flat)
-    return (rays_flat, t_vals)
+    rays_flat_unencoded = tf.reshape(rays, [-1, 3])
+    rays_flat = encode_position(rays_flat_unencoded)
+    return (rays_flat, t_vals, rays_flat_unencoded)

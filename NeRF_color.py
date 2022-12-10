@@ -15,8 +15,8 @@ def depth_to_normals(depth):
     """Assuming `depth` is orthographic, linearize it to a set of normals."""
     f_blur = np.array([1, 2, 1]) / 4
     f_edge = np.array([-1, 0, 1]) / 2
-    dy = convolve2d(depth, f_blur[None, :] * f_edge[:, None])
-    dx = convolve2d(depth, f_blur[:, None] * f_edge[None, :])
+    dy = convolve2d(depth, f_blur[None, :] * f_edge[:, None], mode = "same")
+    dx = convolve2d(depth, f_blur[:, None] * f_edge[None, :], mode = "same")
     inv_denom = 1 / np.sqrt(1 + dx**2 + dy**2)
     normals = np.stack([dx * inv_denom, dy * inv_denom, inv_denom], -1)
     return normals
