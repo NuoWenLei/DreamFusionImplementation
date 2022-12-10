@@ -4,7 +4,7 @@ from NeRF_color import depth_to_normals, color_shading
 from stable_diffusion_loss import diffuse_loss
 
 class BudgetDreamFusion(tf.keras.models.Model):
-	def __init__(self, target_text, nerf_model, diffuse_model, optimizer, loss_function = None):
+	def __init__(self, target_text, nerf_model, diffuse_model, optimizer):
 		self.target_text = target_text
 		self.nerf_model = nerf_model
 		self.diffuse_model = diffuse_model
