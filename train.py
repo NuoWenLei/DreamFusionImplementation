@@ -21,7 +21,7 @@ def train(model):
 			)
 			with tf.GradientTape() as tape:
 				image_observation = model([
-					rays_flat, t_vals, ray_origins[0],
+					rays_flat[tf.newaxis, ...], t_vals[tf.newaxis, ...], ray_origins[0],
 					np.array([0., 0., 0.]), np.array([1., 1., 1.]) 
 				])
 				pred_et, true_et = diffuse_loss(model.diffuse_model, model.target_text, image_observation)
