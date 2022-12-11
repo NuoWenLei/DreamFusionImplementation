@@ -24,7 +24,7 @@ def train(model):
 				ray_origins, ray_dirs, near=2.0, far=6.0, num_samples=NUM_SAMPLES, rand=False
 			)
 			with tf.GradientTape() as tape:
-				image_observation = model([
+				image_observation, density_normals = model([
 					rays_flat[tf.newaxis, ...], t_vals[tf.newaxis, ...], ray_origins[0, 0], rays_flat_unencoded,
 					np.array([0., 0., 0.]), np.array([1., 1., 1.]) 
 				])
@@ -37,6 +37,7 @@ def train(model):
 			if step % 10 == 0:
 				print(f"Step {step}: Loss {loss}")
 		make_plt(image_observation, epoch)
+		make_plt(density_normals, epoch, title = "Density Normals")
 		make_plt(pred_et, epoch, title = "Predicted noise")
 		make_plt(true_et, epoch, title = "True noise")
 

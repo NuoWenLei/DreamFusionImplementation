@@ -19,7 +19,7 @@ class BudgetDreamFusion(tf.keras.models.Model):
 		colored_result = tf.concat([albedo, tf.reduce_mean(albedo, axis = -1)[..., tf.newaxis]], axis = -1)
 		# colored_result = color_shading(density_normals, albedo, rays_flat_unencoded, rays_origin, light_color, light_ambient)
 	
-		return colored_result
+		return colored_result, density_normals
 
 
 
