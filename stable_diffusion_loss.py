@@ -1,4 +1,4 @@
-from imports import tf, np, tqdm, _UNCONDITIONAL_TOKENS
+from imports import tf, np, tqdm, _UNCONDITIONAL_TOKENS, math
 
 def get_context_from_prompt(model, prompt, batch_size):
 	inputs = model.tokenizer.encode(prompt)
@@ -54,7 +54,7 @@ def diffuse_loss(model, prompt, image_observation,
 	a_t = alphas[0]
 	sigma_t = ((1.0 - alphas_prev[0]) ** 0.5) # TODO: check if use alphas_prev or alphas
 
-	diffused_observation = image_observation * a_t + true_et * sigma_t
+	diffused_observation = image_observation * math.sqrt(a_t) + true_et * sigma_t
 
 	pred_et, _, _ = get_model_output(
 		model,
@@ -66,7 +66,7 @@ def diffuse_loss(model, prompt, image_observation,
 		batch_size
 	)
 	
-	return pred_et, true_et
+	return (pred_et * math.sqrt(1 - a_t) / math.sqrt(a_t)), true_et
 
 def manual_encode_and_diffuse(model, prompt,
                               num_steps = 50,
@@ -137,3 +137,14 @@ def manual_encode_and_diffuse(model, prompt,
 		preds.append(pred_x0)
 	latents.append(latent)
 	return latent, latents, preds, context, e_ts, unconds, conds
+
+# def get_x_prev_and_pred_x0(x, e_t, a_t, a_prev, temperature, seed):
+#       sigma_t = 0
+#       sqrt_one_minus_at = math.sqrt(1 - a_t)
+#       pred_x0 = (x - sqrt_one_minus_at * e_t) / math.sqrt(a_t)
+
+#       # Direction pointing to x_t
+#       dir_xt = math.sqrt(1.0 - a_prev - sigma_t**2) * e_t
+#       noise = sigma_t * tf.random.normal(x.shape, seed=seed) * temperature
+#       x_prev = math.sqrt(a_prev) * pred_x0 + dir_xt
+#       return (pred_x0 * math.sqrt(a_t) + e_t * sqrt_one_minus_at) if halt_step else x_prev, pred_x0
