@@ -66,7 +66,7 @@ def diffuse_loss(model, prompt, image_observation,
 		batch_size
 	)
 	
-	return pred_et, true_et
+	return pred_et, true_et, sigma_t
 
 def manual_encode_and_diffuse(model, prompt,
                               num_steps = 50,

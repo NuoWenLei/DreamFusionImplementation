@@ -28,8 +28,8 @@ def train(model):
 					rays_flat[tf.newaxis, ...], t_vals[tf.newaxis, ...], ray_origins[0, 0], rays_flat_unencoded,
 					np.array([0., 0., 0.]), np.array([1., 1., 1.]) 
 				])
-				pred_et, true_et = diffuse_loss(model.diffuse_model, model.target_text, image_observation)
-				loss = tf.reduce_sum((tf.stop_gradient(pred_et - true_et) * image_observation) ** 2)
+				pred_et, true_et, sigma = diffuse_loss(model.diffuse_model, model.target_text, image_observation)
+				loss = sigma * tf.reduce_sum((tf.stop_gradient(pred_et - true_et) * image_observation) ** 2)
 
 			trainable_params = model.nerf_model.trainable_variables
 			gradients = tape.gradient(loss, trainable_params)
