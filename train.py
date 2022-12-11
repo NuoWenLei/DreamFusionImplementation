@@ -4,10 +4,13 @@ from NeRF_camera import sample_random_c2w
 from NeRF_rays import get_rays, render_flat_rays
 from stable_diffusion_loss import diffuse_loss
 
-def make_plt(im, epoch):
+def make_plt(im, epoch, title = None):
 	plt.figure()
 	plt.imshow(tf.keras.utils.array_to_img(im[0]))
-	plt.title(f"Predicted Image: {epoch:03d}")
+	if title:
+		plt.title(f"{title}: {epoch:03d}")
+	else:
+		plt.title(f"Predicted Image: {epoch:03d}")
 	plt.show()
 
 def train(model):
@@ -26,15 +29,16 @@ def train(model):
 					np.array([0., 0., 0.]), np.array([1., 1., 1.]) 
 				])
 				pred_et, true_et = diffuse_loss(model.diffuse_model, model.target_text, image_observation)
-				loss = LOSS_WEIGHT * tf.reduce_sum(tf.stop_gradient(pred_et - true_et) * image_observation)
+				loss = tf.reduce_sum((tf.stop_gradient(pred_et - true_et) * image_observation) ** 2)
 
-			print(loss)
 			trainable_params = model.nerf_model.trainable_variables
 			gradients = tape.gradient(loss, trainable_params)
 			model.optimizer.apply_gradients(zip(gradients, trainable_params))
+			if step % 10 == 0:
+				print(f"Step {step}: Loss {loss}")
 		make_plt(image_observation, epoch)
-		make_plt(pred_et, epoch)
-		make_plt(true_et, epoch)
+		make_plt(pred_et, epoch, title = "Predicted noise")
+		make_plt(true_et, epoch, title = "True noise")
 
 			
 
