@@ -46,22 +46,18 @@ def diffuse_loss(model, prompt, image_observation,
 	# Check range of image_observation prediction
 	# print(tf.math.reduce_min(image_observation), tf.math.reduce_max(image_observation))
 
-	min_cut_observation = (image_observation - tf.math.reduce_min(image_observation))
-
-	scaled_observation = (min_cut_observation * 2. / tf.math.reduce_max(min_cut_observation)) - 1.
-
 	timestep = (tf.cast(tf.random.uniform((), 0.02, 0.98) * 999., "int32")) + 1
 
 	_, alphas, alphas_prev = model.get_starting_parameters(
 		[timestep], batch_size, None
 		)
 
-	true_et = tf.random.normal(tf.shape(scaled_observation))
+	true_et = tf.random.normal(tf.shape(image_observation))
 
 	a_t = alphas[0]
 	sigma_t = ((1.0 - a_t) ** 0.5) # TODO: check if use alphas_prev or alphas
 
-	diffused_observation = scaled_observation * math.sqrt(a_t) + true_et * sigma_t
+	diffused_observation = image_observation * math.sqrt(a_t) + true_et * sigma_t
 
 	pred_et, _, _ = get_model_output(
 		model,
