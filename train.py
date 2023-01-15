@@ -15,11 +15,12 @@ def make_plt(im, epoch, title = None):
 
 def train(model):
 	c2w = sample_random_c2w()
+	ray_origins, ray_dirs = get_rays(H, W, model.focal, c2w)
 	for epoch in range(TRAIN_EPOCHS):
 		print(f"Epoch: {epoch} / {TRAIN_EPOCHS}")
 		
 		for step in tqdm(range(TRAIN_STEPS)):
-			ray_origins, ray_dirs = get_rays(H, W, model.focal, c2w)
+			
 			rays_flat, t_vals, rays_flat_unencoded = render_flat_rays(
 				ray_origins, ray_dirs, near=2.0, far=6.0, num_samples=NUM_SAMPLES, rand=False
 			)
