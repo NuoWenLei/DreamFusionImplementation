@@ -55,7 +55,8 @@ def diffuse_loss(model, prompt, image_observation,
 	true_et = tf.random.normal(tf.shape(image_observation))
 
 	a_t = alphas[0]
-	sigma_t = ((1.0 - a_t) ** 0.5) # TODO: check if use alphas_prev or alphas
+	a_prev = alphas_prev[0]
+	sigma_t = ((1.0 - a_prev) ** 0.5) # TODO: check if use alphas_prev or alphas
 
 	diffused_observation = image_observation * math.sqrt(a_t) + true_et * sigma_t
 
