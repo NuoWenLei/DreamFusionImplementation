@@ -58,9 +58,7 @@ def diffuse_loss(model, prompt, image_observation,
 	a_prev = alphas_prev[0]
 	sigma_t = ((1.0 - a_prev) ** 0.5) # TODO: check if use alphas_prev or alphas
 
-	mean_observation = tf.reduce_mean(image_observation)
-
-	diffused_observation = (image_observation - mean_observation) * math.sqrt(a_prev) + true_et * sigma_t
+	diffused_observation = image_observation * math.sqrt(a_prev) + true_et * sigma_t
 
 	pred_et, _, _ = get_model_output(
 		model,
