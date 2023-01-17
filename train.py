@@ -27,7 +27,11 @@ def helper_blob(im_X, im_Y, r, fill_value):
 
 	draw.ellipse([(X-r, Y-r), (X+r, Y+r)], fill = (fill_val, fill_val, fill_val))
 
-	return (np.array(mask_im).astype("float32") / 255.)[np.newaxis, ...]
+	mask_numpy = np.array(mask_im).astype("float32") / 255.
+
+	mask_numpy_extra = mask_numpy[:, :, 0:1]
+
+	return np.concatenate([mask_numpy, mask_numpy_extra], axis = -1)[np.newaxis, ...]
 
 # # From scikit-learn
 # def binary_blobs(length=512, blob_size_fraction=0.1, n_dim=2,
