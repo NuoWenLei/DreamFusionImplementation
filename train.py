@@ -18,14 +18,16 @@ def helper_blob(im_X, im_Y, r, fill_value):
 	mask_im = Image.new("RGB", (im_X, im_Y), (0, 0, 0))
 	draw = ImageDraw.Draw(mask_im)
 
-	X = im_X / 2
-	Y = im_Y / 2
+	r = int(r)
 
-	fill_val = 255. * fill_value
+	X = int(im_X / 2)
+	Y = int(im_Y / 2)
+
+	fill_val = int(255. * fill_value)
 
 	draw.ellipse([(X-r, Y-r), (X+r, Y+r)], fill = (fill_val, fill_val, fill_val))
 
-	return (np.array(mask_im).astype("float32") / 255.)[tf.newaxis, ...]
+	return (np.array(mask_im).astype("float32") / 255.)[np.newaxis, ...]
 
 # # From scikit-learn
 # def binary_blobs(length=512, blob_size_fraction=0.1, n_dim=2,
