@@ -7,3 +7,4 @@ from typing import Callable, Any
 import matplotlib.pyplot as plt
 from scipy.signal import convolve2d
 import math
+from PIL import Image, ImageDraw
