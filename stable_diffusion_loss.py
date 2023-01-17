@@ -46,7 +46,7 @@ def diffuse_loss(model, prompt, image_observation,
 	# Check range of image_observation prediction
 	# print(tf.math.reduce_min(image_observation), tf.math.reduce_max(image_observation))
 
-	timestep = (tf.cast(tf.random.uniform((), 0.02, 0.98) * 999., "int32")) + 1
+	timestep = (tf.cast(tf.random.uniform((), 0.3, 0.8) * 999., "int32")) + 1
 
 	_, alphas, alphas_prev = model.get_starting_parameters(
 		[timestep], batch_size, None

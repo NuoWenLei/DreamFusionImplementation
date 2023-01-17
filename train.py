@@ -25,15 +25,15 @@ def train(model):
 				ray_origins, ray_dirs, near=2.0, far=6.0, num_samples=NUM_SAMPLES, rand=False
 			)
 			with tf.GradientTape() as tape:
-				image_observation_raw, density_normals = model([
+				image_observation, density_normals = model([
 					rays_flat[tf.newaxis, ...], t_vals[tf.newaxis, ...], ray_origins[0, 0], rays_flat_unencoded,
 					np.array([0., 0., 0.]), np.array([1., 1., 1.]) 
 				])
-				mean_observation = tf.reduce_mean(image_observation_raw)
+				# mean_observation = tf.reduce_mean(image_observation)
 
-				image_observation = image_observation_raw - mean_observation
+				# image_observation = image_observation - mean_observation
 				pred_et, true_et, sigma = diffuse_loss(model.diffuse_model, model.target_text, image_observation)
-				loss = sigma * tf.reduce_sum((tf.stop_gradient(pred_et - true_et) * image_observation_raw) ** 2)
+				loss = sigma * tf.reduce_sum((tf.stop_gradient(pred_et - true_et) * image_observation) ** 2)
 
 			trainable_params = model.nerf_model.trainable_variables
 			gradients = tape.gradient(loss, trainable_params)
